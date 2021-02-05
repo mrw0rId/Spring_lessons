@@ -16,6 +16,7 @@ import java.sql.SQLException;
 @Configuration
 public class AppConfig {
 
+
     @Bean(name = "connection")
     public Connection connection() {
         Connection conn;
