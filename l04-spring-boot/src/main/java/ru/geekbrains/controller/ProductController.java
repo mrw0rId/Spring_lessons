@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.entity.Product;
+import ru.geekbrains.persist.ProductRepositoryImpl;
 import ru.geekbrains.persist.RepositoryInterface;
 
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ public class ProductController {
     private RepositoryInterface<Product> productRepository;
 
     @Autowired
-    public ProductController(RepositoryInterface<Product> productRepository){
+    public ProductController(ProductRepositoryImpl productRepository){
         this.productRepository = productRepository;
     }
 

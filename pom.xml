@@ -19,6 +19,7 @@
         <module>L01-servlets</module>
         <module>L02-spring-intro</module>
         <module>L03-spring-mvc</module>
+        <module>l04-spring-boot</module>
     </modules>
 
 

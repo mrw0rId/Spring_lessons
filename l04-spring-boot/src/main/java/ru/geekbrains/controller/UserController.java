@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.entity.User;
 import ru.geekbrains.persist.RepositoryInterface;
+import ru.geekbrains.persist.UserRepositoryImpl;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
@@ -19,10 +20,10 @@ public class UserController{
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private RepositoryInterface<User> userRepository;
+    private final RepositoryInterface<User> userRepository;
 
     @Autowired
-    public UserController(RepositoryInterface<User> userRepository){
+    public UserController(UserRepositoryImpl userRepository){
         this.userRepository = userRepository;
     }
 

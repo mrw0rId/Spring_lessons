@@ -1,6 +1,5 @@
 package ru.geekbrains.entity;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

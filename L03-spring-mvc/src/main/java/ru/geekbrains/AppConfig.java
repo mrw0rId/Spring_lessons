@@ -37,6 +37,8 @@ public class AppConfig implements WebMvcConfigurer {
 
     private RepoFactory repoFactory;
 
+
+
     @Autowired
     public void setApplicationContext(ApplicationContext applicationContext, RepoFactory repoFactory) {
         this.applicationContext = applicationContext;
@@ -90,6 +92,7 @@ public class AppConfig implements WebMvcConfigurer {
     private ITemplateResolver htmlTemplateResolver() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
         resolver.setApplicationContext(applicationContext);
+        resolver.setCharacterEncoding("UTF-8");
         resolver.setPrefix("/WEB-INF/views/");
         resolver.setSuffix(".html");
         resolver.setCacheable(false);
