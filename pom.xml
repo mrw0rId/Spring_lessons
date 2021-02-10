@@ -20,6 +20,7 @@
         <module>L02-spring-intro</module>
         <module>L03-spring-mvc</module>
         <module>l04-spring-boot</module>
+        <module>L05-jpa-hibernate</module>
     </modules>
 
 

@@ -2,8 +2,6 @@ package ru.geekbrains.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import ru.geekbrains.controller.UserController;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +13,7 @@ public class DBConnection {
     private final String dbUser = "root";
     private final String password = "Twodaysago1!";
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(DBConnection.class);
 
     private final Connection connection;
 

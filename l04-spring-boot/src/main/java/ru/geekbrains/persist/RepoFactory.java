@@ -2,8 +2,6 @@ package ru.geekbrains.persist;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import ru.geekbrains.controller.UserController;
 import ru.geekbrains.util.RepoType;
 
 import java.sql.Connection;
@@ -11,7 +9,7 @@ import java.sql.Connection;
 //@Component
 public class RepoFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RepoFactory.class);
 
     public RepositoryInterface createRepo(RepoType type, Connection connection) {
         RepositoryInterface repo = null;

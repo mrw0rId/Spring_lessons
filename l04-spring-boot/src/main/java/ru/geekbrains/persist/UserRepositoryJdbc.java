@@ -2,7 +2,6 @@ package ru.geekbrains.persist;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.geekbrains.controller.UserController;
 import ru.geekbrains.entity.User;
 
 import java.sql.*;
@@ -11,7 +10,7 @@ import java.util.List;
 
 public class UserRepositoryJdbc implements RepositoryInterface<User> {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRepositoryJdbc.class);
 
     private final Connection connection;
 
