@@ -1,8 +1,8 @@
 package ru.geekbrains.persist;
 
+import ru.geekbrains.entity.Product;
 import ru.geekbrains.util.UpdateType;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface RepositoryInterface<T> {
@@ -22,4 +22,8 @@ public interface RepositoryInterface<T> {
     void delete(String id);
 
     void deleteByName(String name);
+
+    Object findAllAttributes(long id);
+
+    List<T> findByName(String product);
 }

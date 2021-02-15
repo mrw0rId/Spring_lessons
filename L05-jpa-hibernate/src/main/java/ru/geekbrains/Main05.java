@@ -9,14 +9,13 @@ import ru.geekbrains.util.RepoType;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-public class Main {
+public class Main05 {
     public static void main(String[] args) {
         EntityManagerFactory emFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .buildSessionFactory();
-        EntityManager em = emFactory.createEntityManager();
 
-        RepositoryInterface<User> userRepo = RepoFactory.createRepo(RepoType.USER_REMOTE, em);
+        RepositoryInterface<User> userRepo = RepoFactory.createRepo(RepoType.USER_REMOTE, emFactory);
         //INSERT
 //        userRepo.insert(new User("Nick", "123", 43));
 //        userRepo.insert(new User("Jack", "123", 23));

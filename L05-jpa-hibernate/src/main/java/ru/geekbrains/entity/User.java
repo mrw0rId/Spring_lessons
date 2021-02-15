@@ -1,9 +1,18 @@
 package ru.geekbrains.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
+@NamedQueries({
+        @NamedQuery(name = "User.findAllAttributes", query = "select p from Product p inner join p.users u where u.id=:id"),
+        @NamedQuery(name = "User.findAll", query = "select u from User u"),
+        @NamedQuery(name = "User.findByName", query = "select u from User u where u.userName=:userName"),
+        @NamedQuery(name = "User.deleteById", query = "delete from User u where u.id=:id"),
+        @NamedQuery(name = "User.deleteByName", query = "delete from User u where u.userName=:userName")
+})
 public class User {
 
     @Id
@@ -19,6 +28,15 @@ public class User {
     @Column(nullable = false)
     private int age;
 
+    @ManyToMany
+    @JoinTable(
+            name = "products_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+
+    private List<Product> products;
+
     public User() {
     }
 
@@ -28,11 +46,11 @@ public class User {
         this.age = age;
     }
 
-    public User(Long id, String userName, String password, int age) {
-        this.id = id;
+    public User(String userName, String password, int age, List<Product> products) {
         this.userName = userName;
         this.password = password;
         this.age = age;
+        this.products = products;
     }
 
     public Long getId() {
@@ -67,13 +85,24 @@ public class User {
         this.age = age;
     }
 
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
     @Override
     public String toString() {
+        List<String> names = new ArrayList<>();
+        getProducts().forEach(p->names.add(p.getProduct()));
         return "User{" +
                 "id=" + id +
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", age=" + age +
+                ", products=" + names +
                 '}';
     }
 }

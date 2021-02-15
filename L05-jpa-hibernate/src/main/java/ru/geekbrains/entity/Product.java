@@ -1,9 +1,18 @@
 package ru.geekbrains.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "product")
+@Table(name = "products")
+@NamedQueries({
+        @NamedQuery(name = "Product.findAllAttributes", query = "select u from User u inner join u.products p where p.id=:id"),
+        @NamedQuery(name = "Product.findAll", query = "select p from Product p"),
+        @NamedQuery(name = "Product.findByName", query = "select p from Product p where p.product=:product"),
+        @NamedQuery(name = "Product.deleteById", query = "delete from Product p where p.id=:id"),
+        @NamedQuery(name = "Product.deleteByName", query = "delete from Product p where p.product=:product")
+})
 public class Product {
 
     @Id
@@ -19,6 +28,9 @@ public class Product {
     @Column(length = 1024)
     private String description;
 
+    @ManyToMany(mappedBy = "products")
+    private List<User> users;
+
     public Product() {
     }
 
@@ -33,11 +45,11 @@ public class Product {
         this.description = description;
     }
 
-    public Product(Long id, int price, String product, String description) {
-        this.id = id;
+    public Product(int price, String product, String description, List<User> users) {
         this.price = price;
         this.product = product;
         this.description = description;
+        this.users = users;
     }
 
     public Long getId() {
@@ -65,13 +77,24 @@ public class Product {
         this.description = description;
     }
 
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
     @Override
     public String toString() {
+        List<String> names = new ArrayList<>();
+        getUsers().forEach(u->names.add(u.getUserName()));
         return "Product{" +
                 "id=" + id +
                 ", price=" + price +
                 ", product='" + product + '\'' +
                 ", description='" + description + '\'' +
+                ", users=" + names +
                 '}';
     }
 }
