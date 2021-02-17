@@ -18,18 +18,32 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">Products</a>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"-->
+<!--            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--        <span class="navbar-toggler-icon"></span>-->
+<!--    </button>-->
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+<!--    <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+<!--        <ul class="navbar-nav mr-auto">-->
+<!--            <li class="nav-item active">-->
+<!--                <a class="nav-link" th:href="@{/users}">back to Users</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--    </div>-->
+
+    <ul class="navbar-nav mr-auto">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Pages:
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <a class="nav-link" th:href="@{/products}">Products</a>
                 <a class="nav-link" th:href="@{/users}">Users</a>
-            </li>
-        </ul>
-    </div>
+            </ul>
+        </li>
+    </ul>
 </nav>
 
 <div class="container">
@@ -52,12 +66,12 @@
                 <tbody>
                 <tr th:each="product : ${products}" >
                     <td th:text="${product.id}">1</td>
-                    <td th:text="${product.product}">ball</td>
+                    <td th:text="${product.productName}">ball</td>
                     <td th:text="${product.price}">1</td>
                     <td th:text="${product.description}">a big one</td>
                     <td>
                         <a class="btn btn-success" th:href="@{/products/{id}(id = ${product.id})}"><i class="fas fa-edit"></i></a>
-                        <form class="d-inline" th:method="delete" th:action="@{/product/{id}(id = ${product.id})}">
+                        <form class="d-inline" th:method="delete" th:action="@{/products/{id}(id = ${product.id})}">
                             <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
                         </form>
                     </td>

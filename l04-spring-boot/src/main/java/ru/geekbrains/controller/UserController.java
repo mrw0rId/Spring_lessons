@@ -7,12 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.geekbrains.entity.User;
-import ru.geekbrains.persist.RepositoryInterface;
-import ru.geekbrains.persist.UserRepositoryImpl;
+import ru.geekbrains.service.UserRepr;
+import ru.geekbrains.service.UserService;
+import ru.geekbrains.util.NotFoundException;
 
 import javax.validation.Valid;
-import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -20,52 +21,62 @@ public class UserController{
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private final RepositoryInterface<User> userRepository;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserRepositoryImpl userRepository){
-        this.userRepository = userRepository;
+    public UserController(UserService userService){
+        this.userService = userService;
     }
 
     @GetMapping
-    public String usersPage(Model model) throws SQLException {
+    public String usersPage(Model model, @RequestParam("usernameFilter") Optional<String> usernameFilter) {
         logger.info("Users page requested");
-        model.addAttribute("users", userRepository.findAll());
+
+        List<UserRepr> users;
+        if(usernameFilter.isPresent() && !usernameFilter.get().isBlank()){
+            users = userService.findWithFilter(usernameFilter.get());
+        } else users = userService.findAll();
+
+        model.addAttribute("users", users);
         return "user";
     }
 
     @GetMapping("/{id}")
-    public String editPage(@PathVariable("id") Long id, Model model) throws SQLException {
+    public String editPage(@PathVariable("id") Long id, Model model){
         logger.info("User {id} Edit page requested");
-        model.addAttribute("user", userRepository.findById(id));
+        model.addAttribute("user", userService.findById(id)
+                .orElseThrow(NotFoundException::new));
         return "user-form";
     }
 
     @GetMapping("/add")
     public String add(Model model){
         logger.info("User Create page requested");
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserRepr());
         return "user-form";
     }
 
     @PostMapping("/update")
-    public String update(@Valid User user, BindingResult result) throws SQLException {
+    public String update(@Valid UserRepr user, BindingResult result, Model model) {
 
         if(result.hasErrors()){
             return "user-form";
         }
 
-        if(user.getId()!= null){
-            logger.info("User update page requested");
-            userRepository.update(user);
-        } else userRepository.insert(user);
+        if (!user.getPassword().equals(user.getMatchingPassword())) {
+            result.rejectValue("password", "", "Password not matching");
+            return "user-form";
+        }
+
+        logger.info("User update page requested");
+        userService.save(user);
         return "redirect:/users";
     }
 
     @DeleteMapping("{id}")
-    public String delete(@PathVariable("id") Long id) throws SQLException {
+    public String delete(@PathVariable("id") Long id) {
         logger.info("Users delete page requested");
-        userRepository.delete(id);
+        userService.delete(id);
         return "redirect:/users";
     }
 }

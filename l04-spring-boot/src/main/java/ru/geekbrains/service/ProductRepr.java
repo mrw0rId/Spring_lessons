@@ -1,54 +1,57 @@
-package ru.geekbrains.entity;
+package ru.geekbrains.service;
 
-import javax.persistence.*;
+import ru.geekbrains.entity.Product;
+import ru.geekbrains.entity.User;
+
+import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "products")
-@NamedQueries({
-        @NamedQuery(name = "Product.findAllAttributes", query = "select u from User u inner join u.products p where p.id=:id"),
-        @NamedQuery(name = "Product.findAll", query = "select p from Product p"),
-        @NamedQuery(name = "Product.findByName", query = "select p from Product p where p.product=:product"),
-        @NamedQuery(name = "Product.deleteById", query = "delete from Product p where p.id=:id"),
-        @NamedQuery(name = "Product.deleteByName", query = "delete from Product p where p.product=:product")
-})
-public class Product {
+public class ProductRepr {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotNull
+    @Positive
     private BigDecimal price;
 
-    @Column(length = 128, nullable = false)
-    private String product;
+    @NotEmpty
+    private String productName;
 
-    @Column(length = 1024)
     private String description;
 
     @ManyToMany(mappedBy = "products")
     private List<User> users;
 
-    public Product() {
+    public ProductRepr() {
     }
 
-    public Product(BigDecimal price, String product) {
-        this.price = price;
-        this.product = product;
+    public ProductRepr(Product product) {
+        this.id = product.getId();
+        this.price = product.getPrice();
+        this.productName = product.getProductName();
+        this.description = product.getDescription();
+        this.users = product.getUsers();
     }
 
-    public Product(BigDecimal price, String product, String description) {
+    public ProductRepr(BigDecimal price, String productName) {
         this.price = price;
-        this.product = product;
+        this.productName = productName;
+    }
+
+    public ProductRepr(BigDecimal price, String productName, String description) {
+        this.price = price;
+        this.productName = productName;
         this.description = description;
     }
 
-    public Product(BigDecimal price, String product, String description, List<User> users) {
+    public ProductRepr(BigDecimal price, String productName, String description, List<User> users) {
         this.price = price;
-        this.product = product;
+        this.productName = productName;
         this.description = description;
         this.users = users;
     }
@@ -65,11 +68,11 @@ public class Product {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
-    public String getProduct() {
-        return product;
+    public String getProductName() {
+        return productName;
     }
-    public void setProduct(String product) {
-        this.product = product;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
     public String getDescription() {
         return description;
@@ -93,7 +96,7 @@ public class Product {
         return "Product{" +
                 "id=" + id +
                 ", price=" + price +
-                ", product='" + product + '\'' +
+                ", product='" + productName + '\'' +
                 ", description='" + description + '\'' +
                 ", users=" + names +
                 '}';

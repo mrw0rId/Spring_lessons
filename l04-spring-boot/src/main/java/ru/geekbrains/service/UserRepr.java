@@ -1,30 +1,35 @@
-package ru.geekbrains.entity;
+package ru.geekbrains.service;
 
-import ru.geekbrains.service.UserRepr;
+import ru.geekbrains.entity.Product;
+import ru.geekbrains.entity.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "users")
-public class User {
+public class UserRepr {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 128, unique = true, nullable = false)
+    @NotEmpty
     private String userName;
 
-    @Column(nullable = false)
+    @Min(18L)
+    @NotNull
     private int age;
 
-    @Column(length = 512, nullable = false)
+    @Email
+    private String email;
+
+    @NotEmpty
     private String password;
 
-    @Column(nullable = false)
-    private String email;
+    @NotEmpty
+    private String matchingPassword;
 
     @ManyToMany
     @JoinTable(
@@ -34,26 +39,26 @@ public class User {
     )
     private List<Product> products;
 
-    public User() {
+    public UserRepr() {
     }
 
-    public User(UserRepr user) {
+    public UserRepr(User user) {
         this.id = user.getId();
         this.userName = user.getUserName();
         this.age = user.getAge();
         this.password = user.getPassword();
         this.email = user.getEmail();
-        this.products = user.getProducts();
     }
 
-    public User(String userName, int age, String password, String email) {
+    public UserRepr(String userName, int age, String password, String matchingPassword, String email) {
         this.userName = userName;
         this.age = age;
         this.password = password;
+        this.matchingPassword = matchingPassword;
         this.email = email;
     }
 
-    public User(String userName, int age, String password, String email, List<Product> products) {
+    public UserRepr(String userName, int age, String password, String email, List<Product> products) {
         this.userName = userName;
         this.age = age;
         this.password = password;
@@ -101,6 +106,13 @@ public class User {
         this.products = products;
     }
 
+    public String getMatchingPassword() {
+        return matchingPassword;
+    }
+
+    public void setMatchingPassword(String matchingPassword) {
+        this.matchingPassword = matchingPassword;
+    }
 
     public int getAge() {
         return age;
@@ -119,6 +131,7 @@ public class User {
                 ", userName='" + userName + '\'' +
                 ", age=" + age +
                 ", password='" + password + '\'' +
+                ", matchingPassword='" + matchingPassword + '\'' +
                 ", email='" + email + '\'' +
                 ", products=" + names +
                 '}';

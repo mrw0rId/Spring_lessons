@@ -6,6 +6,7 @@ import ru.geekbrains.util.UpdateType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -68,7 +69,7 @@ public class ProductRepositoryJdbc implements RepositoryInterface<Product> {
 
             switch (updateType) {
                 case PRICE:
-                    products.forEach(p -> p.setPrice((Integer) newParameter));
+                    products.forEach(p -> p.setPrice((BigDecimal) newParameter));
                     break;
                 case PRODUCT:
                     products.forEach(p -> p.setProduct((String) newParameter));
