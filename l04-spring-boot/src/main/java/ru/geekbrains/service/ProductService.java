@@ -13,13 +13,19 @@ public interface ProductService {
 
     Optional<ProductRepr> findById(String id);
 
-    List<ProductRepr> findByName(String userName);
+    List<ProductRepr> findByName(String productName);
 
-    void save(ProductRepr user);
+    List<ProductRepr> filterByName(String productName);
+
+    List<ProductRepr> sortByPriceUp(String productName);
+
+    List<ProductRepr> sortByPriceDown(String productName);
+
+    void save(ProductRepr product);
 
     void delete(long id);
 
-    void deleteByName(String userName);
+    void deleteByName(String productName);
 
     void delete(String id);
 }

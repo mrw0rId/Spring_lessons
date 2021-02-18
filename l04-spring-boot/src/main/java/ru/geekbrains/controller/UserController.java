@@ -29,7 +29,8 @@ public class UserController{
     }
 
     @GetMapping
-    public String usersPage(Model model, @RequestParam("usernameFilter") Optional<String> usernameFilter) {
+    public String usersPage(Model model,
+                            @RequestParam("usernameFilter") Optional<String> usernameFilter) {
         logger.info("Users page requested");
 
         List<UserRepr> users;
