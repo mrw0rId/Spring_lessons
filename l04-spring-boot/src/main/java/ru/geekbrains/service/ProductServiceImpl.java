@@ -1,10 +1,14 @@
 package ru.geekbrains.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.entity.Product;
 import ru.geekbrains.persist.ProductRepository;
+import ru.geekbrains.persist.ProductSpecification;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,27 +65,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductRepr> filterByName(String productName) {
-        return productRepo.findProductByProductNameLike(productName)
-                .stream()
-                .map(ProductRepr::new)
-                .collect(Collectors.toList());
-    }
+    public Page<ProductRepr> findWithFilter(String productName, String sort,
+                                            Integer page, Integer size) {
+        Specification<Product> spec = Specification.where(null);
+        Page<ProductRepr> products;
 
-    @Override
-    public List<ProductRepr> sortByPriceUp(String productName) {
-        return productRepo.findProductByProductNameLikeOrderByPriceAsc(productName)
-                .stream()
-                .map(ProductRepr::new)
-                .collect(Collectors.toList());
-    }
+        if (productName != null && !productName.isBlank()) {
+            spec = spec.and(ProductSpecification.productNameLike(productName));
+        }
+        products = productRepo.findAll(spec, PageRequest.of(page, size))
+                .map(ProductRepr::new);
 
-    @Override
-    public List<ProductRepr> sortByPriceDown(String productName) {
-        return productRepo.findProductByProductNameLikeOrderByPriceDesc(productName)
-                .stream()
-                .map(ProductRepr::new)
-                .collect(Collectors.toList());
+        if (sort != null && !sort.isBlank()) {
+            products = ProductSpecification.sortByPrice(products, sort);
+        }
+        return products;
     }
 
     @Transactional

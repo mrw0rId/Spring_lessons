@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head" th:with="title=${title} ?: ''">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"/>
+    <title th:text="Shop + ':' + ${title}">Shop</title>
+</head>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+    <a  th:text="${title}" class="navbar-brand" href="#">Title</a>
+
+    <ul class="navbar-nav mr-auto">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Pages:
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <a class="nav-link" th:href="@{/products}">Products</a>
+                <a class="nav-link" th:href="@{/users}">Users</a>
+            </ul>
+        </li>
+    </ul>
+
+</nav>
+
+</html>

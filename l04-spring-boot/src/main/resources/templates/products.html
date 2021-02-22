@@ -1,50 +1,11 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"/>
-    <title>Products List</title>
-</head>
+<head th:replace="fragments/head.html :: head(title = 'Prodcuts')"/>
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Products</a>
-
-    <!--    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"-->
-    <!--            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
-    <!--        <span class="navbar-toggler-icon"></span>-->
-    <!--    </button>-->
-
-    <!--    <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
-    <!--        <ul class="navbar-nav mr-auto">-->
-    <!--            <li class="nav-item active">-->
-    <!--                <a class="nav-link" th:href="@{/users}">back to Users</a>-->
-    <!--            </li>-->
-    <!--        </ul>-->
-    <!--    </div>-->
-    <!--    </div>-->
-
-    <ul class="navbar-nav mr-auto">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Pages:
-                <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-                <a class="nav-link" th:href="@{/products}">Products</a>
-                <a class="nav-link" th:href="@{/users}">Users</a>
-            </ul>
-        </li>
-    </ul>
-</nav>
+<<nav th:replace="fragments/head.html :: navbar(title = 'Products')"/>
 
 <div class="container">
     <div class="row py-2">
@@ -55,12 +16,12 @@
         <form class="form-inline mx-sm-3 mb-2 mr-2 mt-2" th:method="get">
             <div class="form-group ">
                 <label for="productFilter" class="sr-only">Username filter</label>
-                <input type="text" class="form-control" id="productFilter" th:value="${param.usernameFilter}"
+                <input type="text" class="form-control" id="productFilter" th:value="${param.productFilter}"
                        th:name="productFilter" placeholder="Find by name">
             </div>
 
             <div class="form-group ">
-                <select class="form-control ml-1" th:name="priceFilter">
+                <select class="form-control ml-1" th:name="priceFilter" th:value="${param.priceFilter}">
                     <option value="">Price none</option>
                     <option value="1">Price Increase</option>
                     <option value="2">Price Decrease</option>
@@ -68,33 +29,6 @@
             </div>
             <button type="submit" class="btn btn-primary ml-1">Apply</button>
         </form>
-
-
-<!--        <li class="btn btn-primary mx-sm-2 mb-2 mt-2" data-toggle="dropdown">-->
-<!--            <a href="#" class="text-light">-->
-<!--                Sort by price-->
-<!--                <b class="caret"></b>-->
-<!--            </a>-->
-
-<!--                <form class="dropdown-menu" th:method="get">-->
-<!--                    <div class="col center-block">-->
-<!--                        <label for="priceUpFilter" class="sr-only">Price filter</label>-->
-<!--                        <label for="priceDownFilter" class="sr-only">Price filter</label>-->
-
-<!--                        <button type="submit" class="btn btn-outline-primary btn-sm text-dark" id="priceUpFilter"-->
-<!--                                th:name="priceFilter" th:value="1">-->
-<!--                            Increase-->
-<!--                        </button>-->
-
-<!--                        <button type="submit" class="btn btn-outline-primary btn-sm text-dark" id="priceDownFilter"-->
-<!--                                th:name="priceFilter" th:value="2">-->
-<!--                            Decrease-->
-<!--                        </button>-->
-<!--                    </div>-->
-
-
-<!--                </form>-->
-<!--        </li>-->
 
         <div class="col-12">
             <table class="table table-bordered my-2">
@@ -108,7 +42,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="product : ${products}">
+                <tr th:unless="${products.empty}" th:each="product : ${products}">
                     <td th:text="${product.id}">1</td>
                     <td th:text="${product.productName}">ball</td>
                     <td th:text="${product.price}">1</td>
@@ -121,22 +55,62 @@
                         </form>
                     </td>
                 </tr>
+                <tr th:if="${products.empty}">
+                    <td colspan="5">No data</td>
+                </tr>
                 </tbody>
             </table>
         </div>
+
+        <div class="col-12 fixed-bottom">
+            <nav aria-label="...">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a th:text="Previous"
+                           th:if="${(products.number) > 0}"
+                           th:href="@{/products(page=${products.number}, size=${products.size},
+                           productFilter=${param.productFilter}, priceFilter=${param.priceFilter})}"
+                           class="page-link">Previous</a>
+                    </li>
+
+                    <li th:if="${(products.number) > 0}"
+                        class="page-item">
+                        <a th:text="${products.number}"
+                           th:href="@{/products(page=${products.number}, size=${products.size},
+                           productFilter=${param.productFilter}, priceFilter=${param.priceFilter})}"
+                           class="page-link">1</a>
+                    </li>
+
+                    <li class="page-item active">
+                        <a th:text="${products.number + 1}"
+                           th:href="@{/products(page=${products.number + 1}, size=${products.size},
+                           productFilter=${param.productFilter}, priceFilter=${param.priceFilter})}"
+                           class="page-link">(current)</a>
+                    </li >
+
+                    <li th:if="${(products.number + 1) <= products.totalPages - 1}"
+                        class="page-item">
+                        <a th:text="${products.number + 2}"
+                           th:href="@{/products(page=${products.number + 2}, size=${products.size},
+                           productFilter=${param.productFilter}, priceFilter=${param.priceFilter})}"
+                           class="page-link">1</a>
+                    </li>
+
+                    <li class="page-item">
+                        <a th:text="Next"
+                           th:if="${(products.number + 1) < products.totalPages}"
+                           th:href="@{/products(page=${products.number + 2}, size=${products.size},
+                           productFilter=${param.productFilter}, priceFilter=${param.priceFilter})}"
+                           class="page-link">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
     </div>
 </div>
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+<th:block th:replace="fragments/footer.html :: scripts"/>
+
 </body>
 </html>

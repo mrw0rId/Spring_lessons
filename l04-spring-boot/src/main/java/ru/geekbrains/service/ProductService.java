@@ -1,5 +1,7 @@
 package ru.geekbrains.service;
 
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -15,11 +17,8 @@ public interface ProductService {
 
     List<ProductRepr> findByName(String productName);
 
-    List<ProductRepr> filterByName(String productName);
-
-    List<ProductRepr> sortByPriceUp(String productName);
-
-    List<ProductRepr> sortByPriceDown(String productName);
+    Page<ProductRepr> findWithFilter(String productName, String sort,
+                                     Integer page, Integer size);
 
     void save(ProductRepr product);
 

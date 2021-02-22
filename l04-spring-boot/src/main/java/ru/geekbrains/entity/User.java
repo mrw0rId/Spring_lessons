@@ -18,7 +18,7 @@ public class User {
     private String userName;
 
     @Column(nullable = false)
-    private int age;
+    private Integer age;
 
     @Column(length = 512, nullable = false)
     private String password;
@@ -46,14 +46,14 @@ public class User {
         this.products = user.getProducts();
     }
 
-    public User(String userName, int age, String password, String email) {
+    public User(String userName, Integer age, String password, String email) {
         this.userName = userName;
         this.age = age;
         this.password = password;
         this.email = email;
     }
 
-    public User(String userName, int age, String password, String email, List<Product> products) {
+    public User(String userName, Integer age, String password, String email, List<Product> products) {
         this.userName = userName;
         this.age = age;
         this.password = password;
@@ -101,12 +101,11 @@ public class User {
         this.products = products;
     }
 
-
     public int getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

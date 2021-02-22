@@ -26,7 +26,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private int age;
+    private Integer age;
 
     @ManyToMany
     @JoinTable(
@@ -40,13 +40,13 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String password, int age) {
+    public User(String userName, String password, Integer age) {
         this.userName = userName;
         this.password = password;
         this.age = age;
     }
 
-    public User(String userName, String password, int age, List<Product> products) {
+    public User(String userName, String password, Integer age, List<Product> products) {
         this.userName = userName;
         this.password = password;
         this.age = age;
@@ -81,7 +81,7 @@ public class User {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

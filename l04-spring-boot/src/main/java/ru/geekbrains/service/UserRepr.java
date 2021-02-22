@@ -50,7 +50,7 @@ public class UserRepr {
         this.email = user.getEmail();
     }
 
-    public UserRepr(String userName, int age, String password, String matchingPassword, String email) {
+    public UserRepr(String userName, Integer age, String password, String matchingPassword, String email) {
         this.userName = userName;
         this.age = age;
         this.password = password;
@@ -58,7 +58,7 @@ public class UserRepr {
         this.email = email;
     }
 
-    public UserRepr(String userName, int age, String password, String email, List<Product> products) {
+    public UserRepr(String userName, Integer age, String password, String email, List<Product> products) {
         this.userName = userName;
         this.age = age;
         this.password = password;

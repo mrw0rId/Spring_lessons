@@ -3,6 +3,7 @@ package ru.geekbrains.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,6 @@ import ru.geekbrains.service.ProductRepr;
 import ru.geekbrains.service.ProductService;
 import ru.geekbrains.util.NotFoundException;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,23 +29,17 @@ public class ProductController {
     @GetMapping
     public String productsPage(Model model,
                                @RequestParam("productFilter") Optional<String> productFilter,
-                               @RequestParam(value = "priceFilter", required = false) Optional<String> priceFilter) {
+                               @RequestParam(value = "priceFilter", required = false) Optional<String> priceFilter,
+                               @RequestParam("page") Optional<Integer> page,
+                               @RequestParam("size") Optional<Integer> size) {
         logger.info("product page requested");
 
-        List<ProductRepr> products;
-        if (productFilter.isPresent() && !productFilter.get().isBlank()) {
-            if (priceFilter.isPresent() && !priceFilter.get().isBlank()) {
-                products
-                        = filterByPrice(productFilter.get(), priceFilter.get());
-            } else
-                products
-                        = productService
-                        .filterByName(productFilter.get());
-        } else if (priceFilter.isPresent() && !priceFilter.get().isBlank()) {
-            products
-                    = filterByPrice(productFilter.get(), priceFilter.get());
-        } else products
-                = productService.findAll();
+        Page<ProductRepr> products = productService.findWithFilter(
+                productFilter.filter(s -> !s.isBlank()).orElse(null),
+                priceFilter.filter(s -> !s.isBlank()).orElse(null),
+                page.orElse(1) - 1,
+                size.orElse(5)
+        );
 
         model.addAttribute("products", products);
         return "products";
@@ -79,15 +73,4 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    public List<ProductRepr> filterByPrice(String productFilter, String priceFilter) {
-        switch (priceFilter) {
-            case "1":
-                return productService
-                        .sortByPriceUp(productFilter);
-            case "2":
-                return productService
-                        .sortByPriceDown(productFilter);
-        }
-        return null;
-    }
 }

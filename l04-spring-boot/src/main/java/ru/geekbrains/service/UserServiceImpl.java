@@ -1,10 +1,14 @@
 package ru.geekbrains.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.entity.User;
 import ru.geekbrains.persist.UserRepository;
+import ru.geekbrains.persist.UserSpecification;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +29,8 @@ public class UserServiceImpl implements UserService {
         return userRepo.findAllProductsByUserId(id)
                 .stream()
                 .map(UserRepr::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()
+                );
     }
 
     @Override
@@ -33,7 +38,8 @@ public class UserServiceImpl implements UserService {
         return userRepo.findAll()
                 .stream()
                 .map(UserRepr::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()
+                );
     }
 
     @Transactional
@@ -57,15 +63,26 @@ public class UserServiceImpl implements UserService {
         return userRepo.findByUserName(userName)
                 .stream()
                 .map(UserRepr::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()
+                );
     }
 
     @Override
-    public List<UserRepr> findWithFilter(String userName) {
-        return userRepo.findUserByUserNameLike(userName)
-                .stream()
-                .map(UserRepr::new)
-                .collect(Collectors.toList());
+    public Page<UserRepr> findWithFilter(String userName, Integer minAge, Integer maxAge,
+                                         Integer page, Integer size) {
+        Specification<User> spec = Specification.where(null);
+        if (userName != null && !userName.isBlank()) {
+            spec = spec.and(UserSpecification.userNameLike(userName));
+        }
+        if (minAge != null) {
+            spec = spec.and(UserSpecification.minAge(minAge));
+        }
+        if (maxAge != null) {
+            spec = spec.and(UserSpecification.maxAge(maxAge));
+        }
+
+        return userRepo.findAll(spec, PageRequest.of(page, size))
+                .map(UserRepr::new);
     }
 
     @Transactional
