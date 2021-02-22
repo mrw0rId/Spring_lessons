@@ -29,14 +29,14 @@ public class ProductController {
     @GetMapping
     public String productsPage(Model model,
                                @RequestParam("productFilter") Optional<String> productFilter,
-                               @RequestParam(value = "priceFilter", required = false) Optional<String> priceFilter,
                                @RequestParam("page") Optional<Integer> page,
-                               @RequestParam("size") Optional<Integer> size) {
+                               @RequestParam("size") Optional<Integer> size,
+                               @RequestParam("sort") Optional<String> sort) {
         logger.info("product page requested");
 
         Page<ProductRepr> products = productService.findWithFilter(
                 productFilter.filter(s -> !s.isBlank()).orElse(null),
-                priceFilter.filter(s -> !s.isBlank()).orElse(null),
+                sort.filter(s -> !s.isBlank()).orElse(null),
                 page.orElse(1) - 1,
                 size.orElse(5)
         );

@@ -3,6 +3,7 @@ package ru.geekbrains.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,8 +70,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserRepr> findWithFilter(String userName, Integer minAge, Integer maxAge,
-                                         Integer page, Integer size) {
+                                         Integer page, Integer size , String sort) {
         Specification<User> spec = Specification.where(null);
+        Page<UserRepr> users;
+
         if (userName != null && !userName.isBlank()) {
             spec = spec.and(UserSpecification.userNameLike(userName));
         }
@@ -80,9 +83,15 @@ public class UserServiceImpl implements UserService {
         if (maxAge != null) {
             spec = spec.and(UserSpecification.maxAge(maxAge));
         }
-
-        return userRepo.findAll(spec, PageRequest.of(page, size))
+        if(sort != null && !sort.isBlank()) {
+            users = userRepo
+                    .findAll(spec, PageRequest.of(page, size, Sort.by(sort)))
+                    .map(UserRepr::new);
+        }else users = userRepo
+                .findAll(spec, PageRequest.of(page, size))
                 .map(UserRepr::new);
+
+        return users;
     }
 
     @Transactional

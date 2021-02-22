@@ -36,7 +36,8 @@ public class UserController{
                             @RequestParam("ageMinFilter") Optional<Integer> ageMinFilter,
                             @RequestParam("ageMaxFilter") Optional<Integer> ageMaxFilter,
                             @RequestParam("page") Optional<Integer> page,
-                            @RequestParam("size") Optional<Integer> size) {
+                            @RequestParam("size") Optional<Integer> size,
+                            @RequestParam("sort") Optional<String> sort) {
 
         logger.info("Users page requested");
 
@@ -45,7 +46,8 @@ public class UserController{
                 ageMinFilter.orElse(null),
                 ageMaxFilter.orElse(null),
                 page.orElse(1) - 1,
-                size.orElse(5)
+                size.orElse(5),
+                sort.filter(s -> !s.isBlank()).orElse(null)
         );
 
         model.addAttribute("users", users);
