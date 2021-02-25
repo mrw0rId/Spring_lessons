@@ -1,5 +1,6 @@
 package ru.geekbrains.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.geekbrains.entity.Product;
 import ru.geekbrains.entity.User;
 
@@ -28,6 +29,7 @@ public class UserRepr {
     @NotEmpty
     private String password;
 
+    @JsonIgnore
     @NotEmpty
     private String matchingPassword;
 

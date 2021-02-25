@@ -29,19 +29,23 @@
                 <tr>
                     <th scope="col">id
                         <a th:href="@{/products(sort='id', page=${products.number+1},
-                        size=${products.size}, productFilter=${param.productFilter})}"><i class="fa fa-sort-down"></i></a>
+                        size=${products.size}, productFilter=${param.productFilter})}">
+                            <i class="fa fa-sort-down"></i></a>
                     </th>
                     <th scope="col">Name
                         <a th:href="@{/products(sort='productName', page=${products.number+1},
-                        size=${products.size}, productFilter=${param.productFilter})}"><i class="fa fa-sort-down"></i></a>
+                        size=${products.size}, productFilter=${param.productFilter})}">
+                            <i class="fa fa-sort-down"></i></a>
                     </th>
                     <th scope="col">Price
                         <a th:href="@{/products(sort='price', page=${products.number+1},
-                        size=${products.size}, productFilter=${param.productFilter})}"><i class="fa fa-sort-down"></i></a>
+                        size=${products.size}, productFilter=${param.productFilter})}">
+                            <i class="fa fa-sort-down"></i></a>
                     </th>
                     <th scope="col">Description
                         <a th:href="@{/products(sort='description', page=${products.number+1},
-                        size=${products.size}, productFilter=${param.productFilter})}"><i class="fa fa-sort-down"></i></a>
+                        size=${products.size}, productFilter=${param.productFilter})}">
+                            <i class="fa fa-sort-down"></i></a>
                     </th>
                     <th scope="col">Actions</th>
                 </tr>

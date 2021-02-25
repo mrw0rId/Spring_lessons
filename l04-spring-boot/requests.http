@@ -1,0 +1,57 @@
+GET http://localhost:8080/spring-mvc-app/api/v1/users/all
+###
+GET http://localhost:8080/spring-mvc-app/api/v1/users/12
+###
+POST http://localhost:8080/spring-mvc-app/api/v1/users
+Content-Type: application/json
+
+{
+    "userName": "Klark",
+    "age": 35,
+    "email": "Klark@kripton.com",
+    "password": 123,
+    "products": null
+  }
+###
+PUT http://localhost:8080/spring-mvc-app/api/v1/users
+Content-Type: application/json
+
+{
+  "id": 12,
+  "userName": "Klark",
+  "age": 35,
+  "email": "KalEl@kripton.com",
+  "password": "123",
+  "products": null
+}
+###
+DELETE http://localhost:8080/spring-mvc-app/api/v1/users/12
+
+###Products
+
+GET http://localhost:8080/spring-mvc-app/api/v1/products/all
+###
+GET http://localhost:8080/spring-mvc-app/api/v1/products/13
+###
+POST http://localhost:8080/spring-mvc-app/api/v1/products
+Content-Type: application/json
+
+{
+  "price": 10000.00,
+  "productName": "Ipad",
+  "description": "Air 2019",
+  "users": []
+}
+###
+PUT http://localhost:8080/spring-mvc-app/api/v1/products
+Content-Type: application/json
+
+{
+  "id": 13,
+  "price": 12000.00,
+  "productName": "Ipad",
+  "description": "Air 2019",
+  "users": []
+}
+###
+DELETE http://localhost:8080/spring-mvc-app/api/v1/products/13

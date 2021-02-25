@@ -87,7 +87,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     public void save(ProductRepr product) {
-        productRepo.save(new Product(product));
+        Product productToSave = new Product(product);
+        productRepo.save(productToSave);
+        if (product.getId()==null) {
+            product.setId(productToSave.getId());
+        }
     }
 
     @Transactional
