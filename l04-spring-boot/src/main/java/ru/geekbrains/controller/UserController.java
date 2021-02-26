@@ -42,12 +42,12 @@ public class UserController{
         logger.info("Users page requested");
 
         Page<UserRepr> users = userService.findWithFilter(
-                usernameFilter.filter(s -> !s.isBlank()).orElse(null),
+                usernameFilter.orElse(null),
                 ageMinFilter.orElse(null),
                 ageMaxFilter.orElse(null),
                 page.orElse(1) - 1,
                 size.orElse(5),
-                sort.filter(s -> !s.isBlank()).orElse(null)
+                sort.orElse(null)
         );
 
         model.addAttribute("users", users);

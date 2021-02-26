@@ -96,7 +96,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public void save(UserRepr user) {
-        userRepo.save(new User(user));
+        User userToSave = new User(user);
+        userRepo.save(userToSave);
+        if(user.getId()==null) {
+            user.setId(userToSave.getId());
+        }
     }
 
     @Transactional

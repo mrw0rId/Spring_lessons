@@ -36,7 +36,7 @@ public class ProductController {
 
         Page<ProductRepr> products = productService.findWithFilter(
                 productFilter.filter(s -> !s.isBlank()).orElse(null),
-                sort.filter(s -> !s.isBlank()).orElse(null),
+                sort.orElse(null),
                 page.orElse(1) - 1,
                 size.orElse(5)
         );
