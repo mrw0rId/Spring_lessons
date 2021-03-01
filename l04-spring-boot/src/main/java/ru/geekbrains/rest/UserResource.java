@@ -1,7 +1,9 @@
 package ru.geekbrains.rest;
 
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import ru.geekbrains.util.BadRequestException;
 import ru.geekbrains.util.NotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,6 +33,25 @@ public class UserResource {
                 .stream()
                 .peek(u->u.setPassword(null))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("filter")
+    public Page<UserRepr> listPage(
+            @RequestParam("usernameFilter") Optional<String> usernameFilter,
+            @RequestParam("ageMinFilter") Optional<Integer> ageMinFilter,
+            @RequestParam("ageMaxFilter") Optional<Integer> ageMaxFilter,
+            @Parameter(example = "1") @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size,
+            @RequestParam("sortField") Optional<String> sortField) {
+
+        return userService.findWithFilter(
+                usernameFilter.orElse(null),
+                ageMinFilter.orElse(null),
+                ageMaxFilter.orElse(null),
+                page.orElse(1) - 1,
+                size.orElse(3),
+                sortField.orElse(null)
+        );
     }
 
     @GetMapping(path = "/{id}")

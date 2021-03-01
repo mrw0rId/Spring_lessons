@@ -4,6 +4,7 @@ import ru.geekbrains.service.ProductRepr;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,9 @@ public class Product {
     @Column(length = 1024)
     private String description;
 
+    @Column(length = 1024)
+    private URL photo;
+
     @ManyToMany(mappedBy = "products")
     private List<User> users;
 
@@ -36,6 +40,7 @@ public class Product {
         this.productName = product.getProductName();
         this.description = product.getDescription();
         this.users = product.getUsers();
+        this.photo = product.getPhoto();
     }
 
     public Product(BigDecimal price, String productName) {
@@ -43,17 +48,19 @@ public class Product {
         this.productName = productName;
     }
 
-    public Product(BigDecimal price, String productName, String description) {
+    public Product(BigDecimal price, String productName, String description, URL photo) {
         this.price = price;
         this.productName = productName;
         this.description = description;
+        this.photo = photo;
     }
 
-    public Product(BigDecimal price, String productName, String description, List<User> users) {
+    public Product(BigDecimal price, String productName, String description, List<User> users, URL photo) {
         this.price = price;
         this.productName = productName;
         this.description = description;
         this.users = users;
+        this.photo = photo;
     }
 
     public Long getId() {
@@ -94,6 +101,14 @@ public class Product {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public URL getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(URL photo) {
+        this.photo = photo;
     }
 
     @Override

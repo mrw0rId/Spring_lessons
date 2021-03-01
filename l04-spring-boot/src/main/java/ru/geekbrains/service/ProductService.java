@@ -17,8 +17,8 @@ public interface ProductService {
 
     List<ProductRepr> findByName(String productName);
 
-    Page<ProductRepr> findWithFilter(String productName, String sort,
-                                     Integer page, Integer size);
+    Page<ProductRepr> findWithFilter(String productName, Integer minPrice, Integer maxPrice,
+                                     String sort, Integer page, Integer size);
 
     void save(ProductRepr product);
 

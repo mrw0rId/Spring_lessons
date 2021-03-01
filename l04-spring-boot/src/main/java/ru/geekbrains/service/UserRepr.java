@@ -5,10 +5,7 @@ import ru.geekbrains.entity.Product;
 import ru.geekbrains.entity.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +17,7 @@ public class UserRepr {
     private String userName;
 
     @Min(18L)
+    @Max(120L)
     @NotNull
     private int age;
 
