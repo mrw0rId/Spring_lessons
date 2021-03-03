@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.entity.Product;
 import ru.geekbrains.persist.ProductRepository;
 import ru.geekbrains.persist.ProductSpecification;
+import ru.geekbrains.persist.UserSpecification;
 
 import java.util.List;
 import java.util.Optional;
@@ -66,14 +67,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductRepr> findWithFilter(String productName, String sort,
-                                            Integer page, Integer size) {
+    public Page<ProductRepr> findWithFilter(String productName, Integer minPrice, Integer maxPrice,
+                                            String sort, Integer page, Integer size) {
         Specification<Product> spec = Specification.where(null);
         Page<ProductRepr> products;
 
         if (productName != null && !productName.isBlank()) {
             spec = spec.and(ProductSpecification.productNameLike(productName));
         }
+
+        if (minPrice != null) {
+            spec = spec.and(ProductSpecification.minPrice(minPrice));
+        }
+        if (maxPrice != null) {
+            spec = spec.and(ProductSpecification.maxPrice(maxPrice));
+        }
+
         if (sort != null && !sort.isBlank()) {
             products = productRepo
                     .findAll(spec, PageRequest.of(page, size, Sort.by(sort)))

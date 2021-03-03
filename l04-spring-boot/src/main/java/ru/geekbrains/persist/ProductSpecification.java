@@ -10,12 +10,12 @@ public final class ProductSpecification {
         return (root, query, cb) -> cb.like(root.get("productName"), "%" + productName + "%");
     }
 
-    public static Specification<Product> minAge(Integer minAge) {
-        return (root, query, cb) -> cb.ge(root.get("age"), minAge);
+    public static Specification<Product> minPrice(Integer minPrice) {
+        return (root, query, cb) -> cb.ge(root.get("price"), minPrice);
     }
 
-    public static Specification<Product> maxAge(Integer maxAge) {
-        return (root, query, cb) -> cb.le(root.get("age"), maxAge);
+    public static Specification<Product> maxPrice(Integer maxPrice) {
+        return (root, query, cb) -> cb.le(root.get("price"), maxPrice);
     }
 
 }

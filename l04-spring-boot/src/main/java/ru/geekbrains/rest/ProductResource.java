@@ -1,7 +1,9 @@
 package ru.geekbrains.rest;
 
 
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import ru.geekbrains.util.BadRequestException;
 import ru.geekbrains.util.NotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -26,6 +29,25 @@ public class ProductResource {
     @GetMapping(path = "/all", produces = "application/json")
     public List<ProductRepr> findAll(){
         return productService.findAll();
+    }
+
+    @GetMapping("filter")
+    public Page<ProductRepr> listPage(
+            @RequestParam("productFilter") Optional<String> productFilter,
+            @RequestParam("minPrice") Optional<Integer> minPrice,
+            @RequestParam("maxPrice") Optional<Integer> maxPrice,
+            @Parameter(example = "1") @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size,
+            @RequestParam("sort") Optional<String> sort) {
+
+        return productService.findWithFilter(
+                productFilter.orElse(null),
+                minPrice.orElse(null),
+                maxPrice.orElse(null),
+                sort.orElse(null),
+                page.orElse(1) - 1,
+                size.orElse(5)
+        );
     }
 
     @GetMapping(path = "/{id}")
