@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="fragments/head.html :: head"/>
 
@@ -11,7 +12,7 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
-            <form th:action="@{/users/update}" th:method="post" th:object="${user}">
+            <form th:action="@{/{pathSegment}/update(pathSegment = ${pathSegment})}" th:method="post" th:object="${user}">
                 <input type="hidden" th:field="*{id}" id="id" name="id">
 
                 <div class="form-group">
@@ -42,6 +43,29 @@
                     <label>Matching password</label>
                     <input type="password" th:field="*{matchingPassword}" class="form-control" id="matchingPassword" name="matchingPassword" placeholder="Enter matching password">
                     <p class="text-danger" th:if="${#fields.hasErrors('matchingPassword')}" th:errors="*{matchingPassword}"></p>
+                </div>
+
+                <div class="form-group"
+                     sec:authorize="hasRole('ROLE_SUPER_ADMIN')">
+                    <label for="roles">Roles</label>
+                    <select multiple class="selectpicker" id="roles" title="Chose roles"
+                            th:field="*{roles}" required>
+                        <option th:each="role : ${roles}"
+                                th:text="${role.name}"
+                                th:value="${role.id}"
+                                th:selected="${user.roles?.contains(role)}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group"
+                     sec:authorize="!isAuthenticated()">
+                    <select class="form-select" id="role"
+                            th:field="*{roles}">
+                        <option selected
+                                th:text="GUEST"
+                                th:value=2>
+                        </option>
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
