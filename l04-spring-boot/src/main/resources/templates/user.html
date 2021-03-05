@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="fragments/head.html :: head(title = 'Users')"/>
 
@@ -10,10 +11,10 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
-            <a class="btn btn-primary" th:href="@{/users/add}">Add User</a>
+            <a sec:authorize="hasRole('ROLE_SUPER_ADMIN')" class="btn btn-primary" th:href="@{/users/add}">Add User</a>
         </div>
 
-        <div class="col-12 mt-2">
+        <div class="row col-12 mt-2 ml-0">
             <form class="form-inline" th:method="get">
 
                 <div class="form-group mb-2 mr-2">
@@ -34,8 +35,13 @@
                            th:value="${param.ageMaxFilter}" name="ageMaxFilter" placeholder="Max age">
                 </div>
 
-                <button style="width:50px; padding-left: 0.5%;" type="submit" class="btn btn-primary mb-2">Apply</button>
-                <button style="width:50px; padding-left: 0.5%;" type="reset" class="btn btn-danger ml-1 mb-2">Reset</button>
+                <button style="width:50px; padding-left: 0.8%;" th:type="submit" class="btn btn-primary mb-2">Apply
+                </button>
+            </form>
+            <form class="form-inline" th:method="get">
+                <button style="width:50px; padding-left: 9%;" th:action="@{/users}" class="btn btn-danger ml-1 mb-2">
+                    Reset
+                </button>
             </form>
         </div>
 
@@ -67,7 +73,7 @@
                         ageMaxFilter=${param.ageMaxFilter})}">
                             <i class="fa fa-sort-down"></i></a>
                     </th>
-                    <th scope="col">Actions</th>
+                    <th sec:authorize="hasRole('ROLE_SUPER_ADMIN')" scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -76,7 +82,7 @@
                     <td th:text="${user.userName}">Alex</td>
                     <td th:text="${user.age}">18</td>
                     <td th:text="${user.email}">18</td>
-                    <td>
+                    <td sec:authorize="hasRole('ROLE_SUPER_ADMIN')">
                         <a class="btn btn-success" th:href="@{/users/{id}(id = ${user.id})}"><i class="fas fa-edit"></i></a>
                         <form class="d-inline" th:method="delete" th:action="@{/users/{id}(id = ${user.id})}">
                             <button type="submit" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
@@ -114,7 +120,7 @@
                            th:href="@{/users(sort=${param.sort} ,page=${users.number + 1}, size=${users.size}, usernameFilter=${param.usernameFilter},
                            ageMinFilter=${param.ageMinFilter}, ageMaxFilter=${param.ageMaxFilter})}"
                            class="page-link">(current)</a>
-                    </li >
+                    </li>
 
                     <li th:if="${(users.number + 1) <= users.totalPages - 1}"
                         class="page-item">

@@ -2,12 +2,12 @@ package ru.geekbrains.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.geekbrains.entity.Product;
+import ru.geekbrains.entity.Role;
 import ru.geekbrains.entity.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class UserRepr {
 
@@ -39,6 +39,8 @@ public class UserRepr {
     )
     private List<Product> products;
 
+    private Set<Role> roles;
+
     public UserRepr() {
     }
 
@@ -48,6 +50,7 @@ public class UserRepr {
         this.age = user.getAge();
         this.password = user.getPassword();
         this.email = user.getEmail();
+        this.roles = new HashSet<>(user.getRoles());
     }
 
     public UserRepr(String userName, Integer age, String password, String matchingPassword, String email) {
@@ -69,57 +72,63 @@ public class UserRepr {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
     public String getUserName() {
         return userName;
     }
-
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String post) {
         this.password = post;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String age) {
         this.email = age;
     }
-
     public List<Product> getProducts() {
         return products;
     }
-
     public void setProducts(List<Product> products) {
         this.products = products;
     }
-
     public String getMatchingPassword() {
         return matchingPassword;
     }
-
     public void setMatchingPassword(String matchingPassword) {
         this.matchingPassword = matchingPassword;
     }
-
     public int getAge() {
         return age;
     }
-
     public void setAge(int age) {
         this.age = age;
+    }
+    public Set<Role> getRoles() {
+        return roles;
+    }
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserRepr userRepr = (UserRepr) o;
+        return id.equals(userRepr.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

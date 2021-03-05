@@ -1,5 +1,7 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="head" th:with="title=${title} ?: ''">
     <!-- Required meta tags -->
@@ -11,25 +13,48 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"/>
     <title th:text="Shop + ':' + ${title}">Shop</title>
-    <link th:href="@{/style.css}" rel="stylesheet" />
+    <link th:href="@{/style.css}" rel="stylesheet"/>
 </head>
 
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
-    <a  th:text="${title}" class="navbar-brand" href="#">Title</a>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-    <ul class="navbar-nav mr-auto">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Pages:
-                <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-                <a class="nav-link" th:href="@{/products}">Products</a>
-                <a class="nav-link" th:href="@{/users}">Users</a>
-            </ul>
-        </li>
-    </ul>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div>
+            <img class="mb-0" src="https://cutt.ly/ql5fMkg" alt="" style="width: 30px; height: 30px" height="30">
+        </div>
+        <a th:text="${title}" class="navbar-brand ml-1" href="#">Title</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    Pages
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <a class="nav-link text-dark" style="" th:href="@{/products}">Products</a>
+                    <a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SUPER_ADMIN')"
+                       class="nav-link text-dark" th:href="@{/users}">Users</a>
+                </ul>
+            </li>
+        </ul>
 
+
+        <form sec:authorize="!isAuthenticated()"
+              th:action="@{/login}" th:method="post"
+              class="form-inline my-2 my-lg-0">
+            <button class="btn btn-outline-success my-2 my-sm-0">
+                Login
+            </button>
+        </form>
+
+        <form sec:authorize="isAuthenticated()"
+              th:action="@{/logout}" th:method="post"
+              class="form-inline my-2 my-lg-0">
+            <button class="btn btn-outline-danger my-2 my-sm-0">
+                Logout:<span sec:authentication="principal.username"></span>
+            </button>
+        </form>
+
+    </div>
 </nav>
 
 </html>

@@ -5,6 +5,7 @@ import ru.geekbrains.service.UserRepr;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -34,6 +35,12 @@ public class User {
     )
     private List<Product> products;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
     public User() {
     }
 
@@ -44,6 +51,7 @@ public class User {
         this.password = user.getPassword();
         this.email = user.getEmail();
         this.products = user.getProducts();
+        this.roles = user.getRoles();
     }
 
     public User(String userName, Integer age, String password, String email) {
@@ -64,49 +72,44 @@ public class User {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
     public String getUserName() {
         return userName;
     }
-
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String post) {
         this.password = post;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String age) {
         this.email = age;
     }
-
     public List<Product> getProducts() {
         return products;
     }
-
     public void setProducts(List<Product> products) {
         this.products = products;
     }
-
     public int getAge() {
         return age;
     }
-
     public void setAge(Integer age) {
         this.age = age;
+    }
+    public Set<Role> getRoles() {
+        return roles;
+    }
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override

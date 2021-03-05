@@ -8,11 +8,14 @@ import org.springframework.stereotype.Repository;
 import ru.geekbrains.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     List<User> findByUserName(String userName);
+
+    Optional<User> findUserByUserName(String userName);
 
     void deleteByUserName(String userName);
 

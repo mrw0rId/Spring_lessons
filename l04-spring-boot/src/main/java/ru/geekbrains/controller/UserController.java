@@ -1,15 +1,17 @@
 package ru.geekbrains.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ru.geekbrains.entity.User;
+import ru.geekbrains.persist.RoleRepository;
 import ru.geekbrains.service.UserRepr;
 import ru.geekbrains.service.UserService;
 import ru.geekbrains.util.NotFoundException;
@@ -21,13 +23,14 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController{
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
     private final UserService userService;
 
+    private final RoleRepository roleRepository;
+
     @Autowired
-    public UserController(UserService userService){
+    public UserController(UserService userService, RoleRepository roleRepository){
         this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping
@@ -38,8 +41,6 @@ public class UserController{
                             @RequestParam("page") Optional<Integer> page,
                             @RequestParam("size") Optional<Integer> size,
                             @RequestParam("sort") Optional<String> sort) {
-
-        logger.info("Users page requested");
 
         Page<UserRepr> users = userService.findWithFilter(
                 usernameFilter.orElse(null),
@@ -56,7 +57,8 @@ public class UserController{
 
     @GetMapping("/{id}")
     public String editPage(@PathVariable("id") Long id, Model model){
-        logger.info("User {id} Edit page requested");
+        model.addAttribute("roles",roleRepository.findAll());
+        model.addAttribute("pathSegment", "users");
         model.addAttribute("user", userService.findById(id)
                 .orElseThrow(NotFoundException::new));
         return "user-form";
@@ -64,13 +66,16 @@ public class UserController{
 
     @GetMapping("/add")
     public String add(Model model){
-        logger.info("User Create page requested");
+        model.addAttribute("roles",roleRepository.findAll());
         model.addAttribute("user", new UserRepr());
+        model.addAttribute("pathSegment", "users");
         return "user-form";
     }
 
     @PostMapping("/update")
     public String update(@Valid @ModelAttribute("user") UserRepr user, BindingResult result, Model model) {
+        model.addAttribute("roles",roleRepository.findAll());
+
 
         if(result.hasErrors()){
             return "user-form";
@@ -81,16 +86,30 @@ public class UserController{
             return "user-form";
         }
 
-        logger.info("User update page requested");
         userService.save(user);
         return "redirect:/users";
     }
 
     @DeleteMapping("{id}")
     public String delete(@PathVariable("id") Long id) {
-        logger.info("Users delete page requested");
-        userService.delete(id);
-        return "redirect:/users";
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = null;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails)principal).getUsername();
+        } else if(principal instanceof UserRepr){
+            username = ((UserRepr)principal).getUserName();
+        }else if(principal instanceof User){
+            username = ((User)principal).getUserName();
+        }
+        UserRepr userRepr = userService.findById(id).orElseThrow(NotFoundException::new);
+        if (username.equals(userRepr.getUserName())){
+            userService.delete(id);
+            SecurityContextHolder.getContext().setAuthentication(null);
+            return "redirect:/products";
+        } else {
+            userService.delete(id);
+            return "redirect:/users";
+        }
     }
 
     @ExceptionHandler

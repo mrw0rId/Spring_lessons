@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head.html :: head(title = 'Login')"/>
+
+
+<body class="text-center">
+
+<nav th:replace="fragments/head.html :: navbar(title = 'Login')"/>
+
+
+<div class="container-fluid">
+    <div class="form-group">
+        <div class="col-xs-15">
+            <div>
+                <div th:if="${message} != null">
+                    <div class="alert alert-danger col-xs-offset-1 col-xs-10" th:text="${message}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form class="form-signin" th:action="@{/login}" method="post">
+        <div>
+            <img class="mb-4" src="https://cutt.ly/ql5fMkg" alt="" width="72" height="72">
+        </div>
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+        <link th:href="@{/login.css}" rel="stylesheet"/>
+        <div class="div1">
+            <div class="col-4">
+                <label for="username" class="sr-only">Username</label>
+                <input type="text" name="username" id="username" class="form-control input-lg"
+                       placeholder="Enter username"
+                       required
+                       autofocus>
+            </div>
+
+            <div class="col-4">
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" name="password" id="inputPassword" class="form-control input-lg mt-1"
+                       placeholder="Enter password"
+                       required>
+            </div>
+        </div>
+
+        <div class="btn-group-vertical">
+            <button class="btn btn-lg btn-primary mt-2 center" type="submit">Sign in</button>
+            <a class="btn btn-lg btn-success center" th:href="@{/login/register}">Sign up</a>
+        </div>
+        <div class="div2">
+            <p class="text-muted">&copy; 2021</p>
+        </div>
+    </form>
+</div>
+<th:block th:replace="fragments/footer.html :: scripts"/>
+</body>
+</html>
