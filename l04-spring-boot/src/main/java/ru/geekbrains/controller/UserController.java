@@ -3,6 +3,7 @@ package ru.geekbrains.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -55,6 +56,7 @@ public class UserController{
         return "user";
     }
 
+    @Secured("ROLE_SUPER_ADMIN")
     @GetMapping("/{id}")
     public String editPage(@PathVariable("id") Long id, Model model){
         model.addAttribute("roles",roleRepository.findAll());
@@ -64,6 +66,7 @@ public class UserController{
         return "user-form";
     }
 
+    @Secured("ROLE_SUPER_ADMIN")
     @GetMapping("/add")
     public String add(Model model){
         model.addAttribute("roles",roleRepository.findAll());
@@ -72,6 +75,7 @@ public class UserController{
         return "user-form";
     }
 
+    @Secured("ROLE_SUPER_ADMIN")
     @PostMapping("/update")
     public String update(@Valid @ModelAttribute("user") UserRepr user, BindingResult result, Model model) {
         model.addAttribute("roles",roleRepository.findAll());
@@ -90,6 +94,7 @@ public class UserController{
         return "redirect:/users";
     }
 
+    @Secured("ROLE_SUPER_ADMIN")
     @DeleteMapping("{id}")
     public String delete(@PathVariable("id") Long id) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

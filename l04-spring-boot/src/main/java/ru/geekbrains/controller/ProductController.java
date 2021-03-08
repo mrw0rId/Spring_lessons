@@ -4,13 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.service.ProductRepr;
 import ru.geekbrains.service.ProductService;
 import ru.geekbrains.util.NotFoundException;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
@@ -49,6 +52,7 @@ public class ProductController {
         return "products";
     }
 
+    @Secured({"ROLE_SUPER_ADMIN","ROLE_ADMIN"})
     @GetMapping("/{id}")
     public String editPage(@PathVariable("id") Long id, Model model) {
         logger.info("product {id} Edit page requested");
@@ -57,6 +61,7 @@ public class ProductController {
         return "product-form";
     }
 
+    @Secured({"ROLE_SUPER_ADMIN","ROLE_ADMIN"})
     @GetMapping("/add")
     public String add(Model model) {
         logger.info("product Create page requested");
@@ -64,12 +69,19 @@ public class ProductController {
         return "product-form";
     }
 
+    @Secured({"ROLE_SUPER_ADMIN","ROLE_ADMIN"})
     @PostMapping("/update")
-    public String update(ProductRepr product) {
+    public String update(@Valid @ModelAttribute("product") ProductRepr product, BindingResult result) {
+
+        if(result.hasErrors()){
+            return "product-form";
+        }
+
         productService.save(product);
         return "redirect:/products";
     }
 
+    @Secured({"ROLE_SUPER_ADMIN","ROLE_ADMIN"})
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Long id) {
         logger.info("product delete page requested");

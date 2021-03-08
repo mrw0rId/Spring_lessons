@@ -1,6 +1,7 @@
 GET http://localhost:8080/spring-mvc-app/api/v1/users/all
 ###
-GET http://localhost:8080/spring-mvc-app/api/v1/users/12
+GET http://localhost:8080/spring-mvc-app/api/v1/users/6
+Authorization: Basic Roma 123
 ###
 POST http://localhost:8080/spring-mvc-app/api/v1/users
 Content-Type: application/json

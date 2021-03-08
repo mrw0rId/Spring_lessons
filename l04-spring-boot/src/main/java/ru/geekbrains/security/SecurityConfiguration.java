@@ -9,7 +9,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -25,6 +28,30 @@ public class SecurityConfiguration {
         provider.setPasswordEncoder(passwordEncoder);
 
         auth.authenticationProvider(provider);
+    }
+
+    @Configuration
+    @Order(1)
+    public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .antMatcher("/api/**")
+                    .authorizeRequests()
+                    .anyRequest().hasAnyRole("ADMIN", "SUPER_ADMIN")
+                    .and()
+                    .httpBasic()
+                    .authenticationEntryPoint((req, resp, e) -> {
+                        resp.setContentType("application/json");
+                        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        resp.setCharacterEncoding("UTF-8");
+                        resp.getWriter().println("{ \"error\": \"" + e.getMessage() + "\" }");
+                    })
+                    .and()
+                    .csrf().disable()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        }
     }
 
     @Configuration
@@ -47,7 +74,10 @@ public class SecurityConfiguration {
                     .permitAll()
                     .and()
                     .logout()
-                    .logoutSuccessUrl("/login?logout=true");
+                    .logoutSuccessUrl("/login?logout=true")
+            .and()
+            .exceptionHandling()
+            .accessDeniedPage("/access-denied");
         }
     }
 }
