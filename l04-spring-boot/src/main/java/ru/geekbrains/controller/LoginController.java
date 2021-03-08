@@ -57,5 +57,4 @@ public class LoginController {
         userService.save(user);
         return "redirect:/login";
     }
-
 }
